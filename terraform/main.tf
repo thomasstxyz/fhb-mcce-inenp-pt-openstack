@@ -11,7 +11,7 @@ resource "openstack_compute_instance_v2" "instance_1" {
   }
 
   image_name  = "Ubuntu-20.04"
-  flavor_name = "m1.large"
+  flavor_name = "m1.big"
 
   block_device {
     source_type           = "image"
