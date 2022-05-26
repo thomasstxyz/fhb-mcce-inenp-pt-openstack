@@ -1,5 +1,6 @@
 resource "openstack_compute_instance_v2" "instance_1" {
-  name            = "instance_1"
+  count           = 2
+  name            = "instance_1-${count.index}"
   security_groups = ["${openstack_compute_secgroup_v2.secgroup_1.name}"]
   key_pair    = openstack_compute_keypair_v2.user_key.name
 
@@ -27,11 +28,13 @@ resource "openstack_compute_instance_v2" "instance_1" {
 
 # Create floating ip
 resource "openstack_networking_floatingip_v2" "floatingip_1" {
+  count = 2
   pool = data.openstack_networking_network_v2.provider_network.name
 }
 
 # Attach floating ip to instance
 resource "openstack_compute_floatingip_associate_v2" "floatingip_1" {
-  floating_ip = openstack_networking_floatingip_v2.floatingip_1.address
-  instance_id = openstack_compute_instance_v2.instance_1.id
+  count       = 2
+  floating_ip = openstack_networking_floatingip_v2.floatingip_1[count.index].address
+  instance_id = openstack_compute_instance_v2.instance_1[count.index].id
 }
