@@ -3,6 +3,10 @@ variable "public_key" {
   default = ""
 }
 
-variable "instance_1_count" {
-  default = 3
+variable "kube_master_count" {
+  default = 1
+}
+
+variable "kube_node_count" {
+  default = 2
 }
