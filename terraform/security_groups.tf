@@ -3,6 +3,8 @@ resource "openstack_networking_secgroup_v2" "secgroup_1" {
   description = "My neutron security group"
 }
 
+# by default, egress rules are added to secgroups (allow all outgoing traffic)
+
 resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_ingress_ssh" {
   direction         = "ingress"
   ethertype         = "IPv4"
