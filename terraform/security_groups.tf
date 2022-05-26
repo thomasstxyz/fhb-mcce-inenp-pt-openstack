@@ -3,7 +3,7 @@ resource "openstack_networking_secgroup_v2" "secgroup_1" {
   description = "My neutron security group"
 }
 
-resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_1" {
+resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_ingress_ssh" {
   direction         = "ingress"
   ethertype         = "IPv4"
   protocol          = "tcp"
