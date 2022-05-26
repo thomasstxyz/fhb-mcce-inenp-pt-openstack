@@ -6,7 +6,7 @@ resource "openstack_compute_instance_v2" "instance_1" {
   user_data   = file("scripts/first-boot.sh")
 
   network {
-    port = "${openstack_networking_port_v2.port_1.id}"
+    name = "network_1"
   }
 
   image_name  = "Ubuntu-20.04"
@@ -19,6 +19,10 @@ resource "openstack_compute_instance_v2" "instance_1" {
     volume_size           = 8
     delete_on_termination = true
   }
+
+  depends_on = [
+    openstack_networking_subnet_v2.subnet_1
+  ]
 }
 
 # Create floating ip
