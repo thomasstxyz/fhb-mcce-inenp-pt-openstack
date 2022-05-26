@@ -1,7 +1,7 @@
 resource "openstack_compute_instance_v2" "instance_1" {
   count           = 2
   name            = "instance_1-${count.index}"
-  security_groups = ["${openstack_compute_secgroup_v2.secgroup_1.name}"]
+  security_groups = ["${openstack_networking_secgroup_v2.secgroup_1.name}"]
   key_pair    = openstack_compute_keypair_v2.user_key.name
 
   user_data   = file("scripts/first-boot.sh")
