@@ -11,6 +11,7 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{verbatim}
 \usepackage[margin=2.5cm]{geometry}
+\usepackage{authblk}
 
 \graphicspath{{fig/}}
 \DeclareGraphicsExtensions{.png}
@@ -21,10 +22,15 @@
 \input{section/title}
 \input{section/authors}
 \maketitle
+
+\tableofcontents
+\clearpage
+
 \input{section/introduction}
 \input{section/body}
 \input{section/conclusion}
 
+\clearpage
 % references
 \bibliographystyle{unsrtnat}
 \bibliography{ref/references}
