@@ -3,9 +3,84 @@ Explain the Terraform plans and Ansible Playbooks roughly. \\
 
 \noindent Give an overview of the infrastructure code..
 
-\subsection{Terraform - Infrastructure \& Openstack resources}
+\subsection{Infrastructure provisioning}
+
+\subsubsection{Terraform execution environment}
+To get started, the Git Repository needs to be cloned.
+
+\begin{verbatim}
+	$ git clone https://github.com/thomasstxyz/fhb-mcce-inenp-pt-openstack
+\end{verbatim}
+
+\noindent
+Next, the credentials for authentication to the Openstack API,
+as well as the public ssh key will be
+read into environment variables.
+
+\begin{verbatim}
+	$ export OS_USERNAME=my_user
+	$ export OS_PASSWORD=my_pass
+	$ export OS_PROJECT_ID=1234...
+	$ export TF_VAR_public_key="ssh-rsa ..."	
+\end{verbatim}
+
+\noindent
+The project id can be retrieved from the Openstack Horizon Dashboard
+under "Project - API Access" 
+\url{http://172.20.41.1/horizon/project/api_access/},
+upon pressing the button "View Credentials". \\
+
+\noindent
+Now the setup is complete and Terraform should be able to authenticate
+to the Openstack API. Change into the terraform directory.
+
+\begin{verbatim}
+	$ cd terraform
+\end{verbatim}
+
+\noindent
+Use Terraform plan to look at what changes would be made by executing
+(this is just a dry run and does not make any changes).
+
+\begin{verbatim}
+	$ terraform plan
+\end{verbatim}
+
+\noindent
+A summary will be printed in the console, stating 
+how many resources to add, change and destroy. \\
+
+\begin{verbatim}
+	Plan: 21 to add, 0 to change, 0 to destroy.
+\end{verbatim}
+
+\noindent
+If content with the dry run, the plan can be applied.
+
+\begin{verbatim}
+	$ terraform apply
+\end{verbatim}
+
+\noindent
+Again a summary will be printed, and the user is asked to confirm with yes. \\
+
+\noindent
+After a successful Terraform apply, the IP addresses of the created compute 
+instances are displayed on screen. Additionally, the addresses are written
+to the Ansible inventory file \verb|../ansible/inventory|,
+which is needed by Ansible for the next step. \\
+
+\noindent
+All resources can be deleted, by running Terraform destroy.
+
+\begin{verbatim}
+	$ terraform destroy
+\end{verbatim}
 
 \subsection{Ansible - K8s cluster \& OS configuration}
+
+\section{Openstack resources}
+List all Openstack resources, which are provisioned by Terraform.
 
 \section{Operating Manual}
 Some commands for servicing the infrastructure, updating, patching... \\
