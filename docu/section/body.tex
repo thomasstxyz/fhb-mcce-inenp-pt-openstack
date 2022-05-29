@@ -1,11 +1,7 @@
-\section{Infrastructure Setup}
-Explain the Terraform plans and Ansible Playbooks roughly. \\
+\section{Infrastructure-as-Code Setup \& Usage}
+This section explains the infrastructure code and how to use it.
 
-\noindent Give an overview of the infrastructure code..
-
-\subsection{Infrastructure provisioning}
-
-\subsubsection{Terraform execution environment}
+\subsection{Terraform - Openstack provisioning}
 To get started, the Git Repository needs to be cloned.
 
 \begin{verbatim}
@@ -77,10 +73,95 @@ All resources can be deleted, by running Terraform destroy.
 	$ terraform destroy
 \end{verbatim}
 
-\subsection{Ansible - K8s cluster \& OS configuration}
+\subsection{Ansible - Kubernetes cluster \& OS configuration}
+After provisioning of the Openstack instances via Terraform,
+Ansible creates a Kubernetes cluster.
+For this, the Ansible Role \verb|geerlingguy.kubernetes|
+(https://github.com/geerlingguy/ansible-role-kubernetes) is used. \\
 
-\section{Openstack resources}
-List all Openstack resources, which are provisioned by Terraform.
+\noindent
+Change into the ansible directory 
+
+\begin{verbatim}
+	$ cd ansible
+\end{verbatim}
+
+\noindent
+and install the project dependencies,
+which is only the kubernetes role.
+
+\begin{verbatim}
+	$ ansible-galaxy role install -r roles/requirements.yml
+\end{verbatim}
+
+\noindent
+Now the Ansible Playbook can be run to install dependencies,
+load kernel modules, do further configuration, and finally
+create a Kubernetes cluster on top of the compute instances.
+
+\begin{verbatim}
+	$ ansible-playbook -i inventory playbook.yml
+\end{verbatim}
+
+\noindent
+\textbf{Note:} There are certain \verb|pre_tasks| specified in the
+\verb|playbook.yml|, which are needed for this specific 
+Openstack infrastructure. The hostname is mapped to \verb|127.0.1.1| 
+in the \verb|/etc/hosts| file, which fixes a bug, where
+every time sudo is called, the process hangs for about ten seconds,
+which would significantly decrease the speed at which the 
+Ansible playbook is run, because it calls sudo on every task. 
+Furthermore, DNS nameservers are specified, because the Openstack DHCP server
+does not seem to provide them. \\
+
+\noindent
+After successful playbook run, the Kubernetes cluster is ready for use. \\
+
+\noindent
+Get started by logging into the master node
+
+\begin{verbatim}
+	$ ssh ubuntu@<master_node_ip>
+\end{verbatim}
+
+\noindent
+and switching to the root user.
+
+\begin{verbatim}
+	$ sudo su - root
+\end{verbatim}
+
+\noindent
+The \verb|kubectl| command line tool can be used to interact with Kubernetes.
+
+\begin{verbatim}
+	$ kubectl get nodes
+	$ kubectl cluster-info
+\end{verbatim}
+
+\section{Openstack Resource Specification}
+To get a full understanding of the Openstack resources, 
+which are provisioned by Terraform,
+you have to look at the terraform plan files \verb|*.tf| in the
+\verb|terraform/| directory.
+
+\subsection{Resource Overview}
+Firstly, a private network is created with a subnet,
+which is where the compute instances are located. It is only a private network,
+in the sense that machines do not have a public ip address. For this purpose,
+Floating IP addresses are created for each compute instance. Furthermore,
+a security group is created with multiple ingress rules. For the sake of 
+simplicity, the same security group is used for the Kubernetes Master and Node.
+A router is used to connect the private network with the provider network,
+which is where the Floating IP addresses are created. 
+This network is accessible from the local area network (LAN). 
+Another much needed resource is the public ssh key of the operator,
+which will be imported into Openstack by Terraform. 
+Finally, two groups of Compute Instances are created. 
+The \verb|kube_master| and the \verb|kube_node| resources.
+By default, one \verb|kube_master| instance and two \verb|kube_node| instances.
+The instances are installed from a \verb|Ubuntu-20.04| image and the 
+Openstack Nova instance type is \verb|m1.big|.
 
 \section{Operating Manual}
 Some commands for servicing the infrastructure, updating, patching... \\
