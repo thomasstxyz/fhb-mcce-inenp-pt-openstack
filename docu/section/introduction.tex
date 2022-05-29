@@ -1,5 +1,5 @@
 \section{Introduction}
-Introduction of the document.
+In the introduction, the given task and the chosen approach are described.
 
 \subsection{Scope}
 
@@ -69,19 +69,24 @@ By nature, it is a declarative language, which means that
 you define a desired end result, instead of writing imperative statements.
 In this way, the code can achieve the feature of idempotency,
 which means that it can be applied multiple times without 
-changing the result beyond the initial application.
+changing the result beyond the initial application. \\
 
+\noindent
 These Terraform plans define all infrastructure components
 within Openstack like Network, Routers, Subnets, Floating IPs, Instances, etc.,
-and their parameters like network CIDRs, IP addresses, vCPU count, disk and memory space etc.
+and their parameters like network CIDRs, IP addresses, vCPU count, disk and memory space etc. \\
+
+\noindent
 Terraform plans can be applied, upon the Terraform engine will make
 the according HTTP calls to the Openstack API, which will result in the infrastructure
-being scheduled for provisioning.
+being scheduled for provisioning. \\
 
+\noindent
 After successful provisioning of the infrastructure resources on Openstack,
 Terraform will return the newly created Floating IP addresses, 
-which are associated with the compute instances. 
+which are associated with the compute instances. \\
 
+\noindent
 These IP addresses are written
 into the Ansible inventory \cite{ansibleInventoryWebsite}, which is a configuration
 file in the ini-style used by Ansible. In the Ansible inventory, the hosts, which 
@@ -89,8 +94,9 @@ Ansible should target, are defined, as well as additional variables if needed,
 like which user to connect with or which port the SSH daemon listens at.
 For connecting to the hosts, Ansible uses simple SSH connections.
 Ansible uses so called Ansible Playbooks \cite{ansiblePlaybooksWebsite}
-to define the configuration, which are written in the YAML syntax.
+to define the configuration, which are written in the YAML syntax. \\
 
+\noindent
 Ansible Playbooks are made up of many small tasks, which most of the time basically
 represent shell commands, with the difference, that they are defined as YAML,
 which has the advantage of being easy to read and understand even for non-programmers.
