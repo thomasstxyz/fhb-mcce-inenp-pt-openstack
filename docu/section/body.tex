@@ -148,13 +148,32 @@ you have to look at the terraform plan files \verb|*.tf| in the
 \subsection{Resource Overview}
 Firstly, a private network is created with a subnet,
 which is where the compute instances are located. It is only a private network,
-in the sense that machines do not have a public ip address. For this purpose,
+in the sense that machines do not have public ip addresses. For this purpose,
 Floating IP addresses are created for each compute instance. Furthermore,
-a security group is created with multiple ingress rules. For the sake of 
+a security group is created with multiple ingress rules. 
+
+\begin{itemize}
+	\item Ingress Port 22 - SSH
+	\item Ingress Port 6443 - Kubernetes API
+\end{itemize}
+
+\noindent
+The SSH port is needed, in order for Ansible to connect.
+The Kubernetes API port is needed for the master (control plane) node,
+if the operator wants to manage the cluster from their own workstation. \\
+
+\noindent
+The security group can and should be optimized, by specifying the remaining
+rules, which are needed by Kubernetes for in-cluster traffic.
+For the sake of 
 simplicity, the same security group is used for the Kubernetes Master and Node.
+This should be sorted out before using this project in production. \\
+
+\noindent
 A router is used to connect the private network with the provider network,
 which is where the Floating IP addresses are created. 
-This network is accessible from the local area network (LAN). 
+This network is accessible from the local area network (LAN),
+where the Openstack server is located. 
 Another much needed resource is the public ssh key of the operator,
 which will be imported into Openstack by Terraform. 
 Finally, two groups of Compute Instances are created. 
