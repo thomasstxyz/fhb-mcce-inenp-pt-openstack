@@ -104,6 +104,20 @@ which means running system updates, installing additional software,
 configuring. All this automation can be done on multiple hosts, without 
 having to login to any host by hand. 
 
+\subsection{Result}
+The end result after applying this infrastructure code is a 
+Kubernetes Cluster consisting of one control plane and two worker nodes.
+The virtual machine instances are provisioned via
+Terraform on Openstack. IP addresses of the machines are handed off to Ansible, which continues
+the provisioning process at the operating system level
+after Terraform successfully starts the Ubuntu 20.04 machine images.
+Ansible connects via the SSH key pair, which is provided to 
+Terraform prior to \verb|terraform apply| by the operator.
+Ansible updates the base system packages, installs necessary
+components for Kubernetes like \verb|kubectl| and overlay network,
+and finally create a Kubernetes cluster and joining all nodes together.
+The root user on the control plane machine will have access to
+kubeadm and kubectl.
 
 
 
